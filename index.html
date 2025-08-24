@@ -188,31 +188,114 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
             overflow-x: auto;
         }
-        .stair-case {
+        /* 改进的楼梯可视化样式 */
+        .stair-diagram {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin: 10px 0;
+            margin: 15px 0;
             min-width: 300px;
         }
-        .stair-run {
+        .stair-section {
             display: flex;
-            margin: 8px 0;
-            align-items: flex-end;
+            margin: 5px 0;
+            position: relative;
         }
-        .stair {
-            width: 20px;
-            height: 12px;
+        .stair-step {
+            width: 25px;
+            height: 15px;
             background: linear-gradient(135deg, #8bc34a 0%, #689f38 100%);
-            margin: 1px;
-            border-radius: 2px;
+            margin: 0 1px;
+            border-radius: 3px;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .stair-step:after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #558b2f;
         }
         .stair-platform {
-            width: 60px;
-            height: 16px;
+            width: 70px;
+            height: 20px;
             background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
-            margin: 0 8px;
+            margin: 0 10px;
+            border-radius: 5px;
+            position: relative;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        .stair-arrow {
+            margin: 0 5px;
+            color: #666;
+            font-weight: bold;
+        }
+        .stair-dimension {
+            position: absolute;
+            background: rgba(255,255,255,0.9);
+            padding: 2px 6px;
             border-radius: 3px;
+            font-size: 10px;
+            border: 1px solid #ddd;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .stair-run-label {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4a6572;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .stair-3d-effect {
+            position: relative;
+        }
+        .stair-3d-effect:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.1) 100%);
+            border-radius: 3px;
+        }
+        .diagram-legend {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+        }
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+        }
+        .legend-step {
+            background: linear-gradient(135deg, #8bc34a 0%, #689f38 100%);
+        }
+        .legend-platform {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
         }
         .spec-note {
             background: #e8f4f8;
@@ -262,6 +345,14 @@
             .result-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+            .stair-step {
+                width: 30px;
+                height: 18px;
+            }
+            .stair-platform {
+                width: 80px;
+                height: 25px;
+            }
         }
         
         @media (min-width: 768px) {
@@ -274,12 +365,20 @@
             .content {
                 padding: 20px;
             }
+            .stair-step {
+                width: 35px;
+                height: 20px;
+            }
+            .stair-platform {
+                width: 90px;
+                height: 30px;
+            }
         }
         
         /* 防止iOS缩放 */
         @media screen and (max-width: 480px) {
             input, select {
-                font-size: 16px !important; /* 防止iOS缩放 */
+                font-size: 16px !important;
             }
         }
     </style>
@@ -403,26 +502,22 @@
             </div>
             
             <div class="section">
-                <h2>楼梯示意图</h2>
+                <h2>楼梯结构示意图</h2>
                 <div class="visualization">
-                    <div class="stair-case" id="stair-visual">
-                        <div class="stair-run">
-                            <div class="stair-platform"></div>
-                            <div class="stair"></div>
-                            <div class="stair"></div>
-                            <div class="stair"></div>
-                            <div class="stair"></div>
-                            <div class="stair"></div>
-                            <div class="stair"></div>
-                            <div class="stair"></div>
-                            <div class="stair"></div>
-                            <div class="stair"></div>
-                            <div class="stair-platform"></div>
+                    <div class="stair-diagram" id="stair-diagram">
+                        <!-- 示意图将通过JavaScript动态生成 -->
+                    </div>
+                    
+                    <div class="diagram-legend">
+                        <div class="legend-item">
+                            <div class="legend-color legend-step"></div>
+                            <span>踏步</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color legend-platform"></div>
+                            <span>休息平台</span>
                         </div>
                     </div>
-                    <p style="text-align: center; font-size: 13px; color: #666; margin-top: 10px;">
-                        绿色表示踏步，橙色表示平台
-                    </p>
                 </div>
             </div>
             
@@ -466,13 +561,12 @@
             
             if (currentStairType === 'three-run') {
                 run3Config.style.display = 'flex';
-                run3Height.value = 1000; // 默认值
+                run3Height.value = 1000;
             } else {
                 run3Config.style.display = 'none';
                 run3Height.value = 0;
             }
             
-            // 更新跑高分配
             updateCustomRunHeights();
         }
         
@@ -511,17 +605,14 @@
             const run2Height = parseInt(document.getElementById('run2-height').value) || 0;
             const run3Height = parseInt(document.getElementById('run3-height').value) || 0;
             
-            let totalSteps, stepsPerRun, stairLength, actualHeight, platformCount;
+            let totalSteps, stepsPerRun, stairLength, actualHeight;
             
             if (currentStairType === 'standard') {
-                // 标准楼梯计算
                 totalSteps = Math.round(floorHeight / stepHeight);
                 stepsPerRun = totalSteps;
                 stairLength = stepsPerRun * stepWidth;
                 actualHeight = stepsPerRun * stepHeight;
-                platformCount = 0;
             } else if (currentStairType === 'two-run') {
-                // 两跑楼梯计算
                 const run1Steps = Math.round(run1Height / stepHeight);
                 const run2Steps = Math.round(run2Height / stepHeight);
                 
@@ -529,9 +620,7 @@
                 stepsPerRun = Math.max(run1Steps, run2Steps);
                 stairLength = (run1Steps + run2Steps) * stepWidth;
                 actualHeight = run1Steps * stepHeight + run2Steps * stepHeight;
-                platformCount = 1;
             } else {
-                // 三跑楼梯计算
                 const run1Steps = Math.round(run1Height / stepHeight);
                 const run2Steps = Math.round(run2Height / stepHeight);
                 const run3Steps = Math.round(run3Height / stepHeight);
@@ -540,7 +629,6 @@
                 stepsPerRun = Math.max(run1Steps, run2Steps, run3Steps);
                 stairLength = (run1Steps + run2Steps + run3Steps) * stepWidth;
                 actualHeight = run1Steps * stepHeight + run2Steps * stepHeight + run3Steps * stepHeight;
-                platformCount = 2;
             }
             
             // 计算楼梯坡度（角度）
@@ -562,8 +650,8 @@
             // 验证结果
             validateResults(stepHeight, stepWidth, slopeAngle, stairWidth, actualHeight, floorHeight);
             
-            // 更新楼梯可视化
-            updateStairVisualization(stepsPerRun, currentStairType);
+            // 更新楼梯示意图
+            updateStairDiagram(currentStairType, stepsPerRun);
         }
         
         function validateResults(stepHeight, stepWidth, slopeAngle, stairWidth, actualHeight, floorHeight) {
@@ -571,7 +659,6 @@
             let messages = [];
             let validationClass = 'valid';
             
-            // 验证踏步高度
             if (stepHeight < 150 || stepHeight > 180) {
                 if (stepHeight < 140 || stepHeight > 200) {
                     messages.push('踏步高度超出安全范围(140-200mm)');
@@ -582,7 +669,6 @@
                 }
             }
             
-            // 验证踏步宽度
             if (stepWidth < 260 || stepWidth > 300) {
                 if (stepWidth < 220 || stepWidth > 320) {
                     messages.push('踏步宽度超出安全范围(220-320mm)');
@@ -593,19 +679,16 @@
                 }
             }
             
-            // 验证坡度
             if (slopeAngle < 20 || slopeAngle > 45) {
                 messages.push('楼梯坡度超出推荐范围(20°-45°)');
                 validationClass = validationClass === 'valid' ? 'warning' : validationClass;
             }
             
-            // 验证楼梯宽度
             if (stairWidth < 900) {
                 messages.push('楼梯宽度小于最小推荐值900mm');
                 validationClass = validationClass === 'valid' ? 'warning' : validationClass;
             }
             
-            // 验证实际高度与层高的差异
             const heightDiff = Math.abs(actualHeight - floorHeight);
             if (heightDiff > 50) {
                 messages.push(`实际高度与输入层高相差${heightDiff}mm`);
@@ -621,90 +704,142 @@
             }
         }
         
-        function updateStairVisualization(stepsPerRun, stairType) {
-            const stairVisual = document.getElementById('stair-visual');
-            stairVisual.innerHTML = '';
+        function updateStairDiagram(stairType, stepsPerRun) {
+            const diagramElement = document.getElementById('stair-diagram');
+            diagramElement.innerHTML = '';
             
             if (stairType === 'standard') {
-                // 标准楼梯可视化
-                const run = document.createElement('div');
-                run.className = 'stair-run';
+                // 标准楼梯示意图
+                const section = document.createElement('div');
+                section.className = 'stair-section';
+                section.style.position = 'relative';
                 
-                // 添加平台
-                run.appendChild(createPlatform());
+                // 添加跑标签
+                const runLabel = document.createElement('div');
+                runLabel.className = 'stair-run-label';
+                runLabel.textContent = '单跑楼梯';
+                section.appendChild(runLabel);
                 
-                // 添加踏步（最多显示10个）
-                for (let i = 0; i < Math.min(stepsPerRun, 10); i++) {
-                    run.appendChild(createStair());
+                // 添加底部平台
+                section.appendChild(createPlatform('平台'));
+                
+                // 添加踏步
+                for (let i = 0; i < Math.min(stepsPerRun, 12); i++) {
+                    section.appendChild(createStep());
                 }
                 
                 // 添加顶部平台
-                run.appendChild(createPlatform());
+                section.appendChild(createPlatform('平台'));
                 
-                stairVisual.appendChild(run);
+                diagramElement.appendChild(section);
+                
             } else if (stairType === 'two-run') {
-                // 两跑楼梯可视化
+                // 两跑楼梯示意图
+                // 第一跑
                 const run1 = document.createElement('div');
-                run1.className = 'stair-run';
+                run1.className = 'stair-section';
+                run1.style.position = 'relative';
                 
-                run1.appendChild(createPlatform());
-                for (let i = 0; i < Math.min(stepsPerRun, 5); i++) {
-                    run1.appendChild(createStair());
+                const run1Label = document.createElement('div');
+                run1Label.className = 'stair-run-label';
+                run1Label.textContent = '第一跑';
+                run1.appendChild(run1Label);
+                
+                run1.appendChild(createPlatform('平台'));
+                for (let i = 0; i < Math.min(stepsPerRun, 6); i++) {
+                    run1.appendChild(createStep());
                 }
-                run1.appendChild(createPlatform());
+                run1.appendChild(createPlatform('休息平台'));
                 
+                // 第二跑
                 const run2 = document.createElement('div');
-                run2.className = 'stair-run';
+                run2.className = 'stair-section';
+                run2.style.position = 'relative';
                 
-                for (let i = 0; i < Math.min(stepsPerRun, 5); i++) {
-                    run2.appendChild(createStair());
+                const run2Label = document.createElement('div');
+                run2Label.className = 'stair-run-label';
+                run2Label.textContent = '第二跑';
+                run2.appendChild(run2Label);
+                
+                for (let i = 0; i < Math.min(stepsPerRun, 6); i++) {
+                    run2.appendChild(createStep());
                 }
-                run2.appendChild(createPlatform());
+                run2.appendChild(createPlatform('平台'));
                 
-                stairVisual.appendChild(run1);
-                stairVisual.appendChild(run2);
+                // 添加箭头指示方向
+                const arrow = document.createElement('div');
+                arrow.className = 'stair-arrow';
+                arrow.textContent = '↑';
+                arrow.style.margin = '10px 0';
+                arrow.style.fontSize = '20px';
+                
+                diagramElement.appendChild(run1);
+                diagramElement.appendChild(arrow);
+                diagramElement.appendChild(run2);
+                
             } else {
-                // 三跑楼梯可视化
+                // 三跑楼梯示意图
                 const run1 = document.createElement('div');
-                run1.className = 'stair-run';
+                run1.className = 'stair-section';
+                run1.style.position = 'relative';
                 
-                run1.appendChild(createPlatform());
+                const run1Label = document.createElement('div');
+                run1Label.className = 'stair-run-label';
+                run1Label.textContent = '第一跑';
+                run1.appendChild(run1Label);
+                
+                run1.appendChild(createPlatform('平台'));
                 for (let i = 0; i < Math.min(stepsPerRun, 4); i++) {
-                    run1.appendChild(createStair());
+                    run1.appendChild(createStep());
                 }
-                run1.appendChild(createPlatform());
+                run1.appendChild(createPlatform('休息平台'));
                 
                 const run2 = document.createElement('div');
-                run2.className = 'stair-run';
+                run2.className = 'stair-section';
+                run2.style.position = 'relative';
+                
+                const run2Label = document.createElement('div');
+                run2Label.className = 'stair-run-label';
+                run2Label.textContent = '第二跑';
+                run2.appendChild(run2Label);
                 
                 for (let i = 0; i < Math.min(stepsPerRun, 4); i++) {
-                    run2.appendChild(createStair());
+                    run2.appendChild(createStep());
                 }
-                run2.appendChild(createPlatform());
+                run2.appendChild(createPlatform('休息平台'));
                 
                 const run3 = document.createElement('div');
-                run3.className = 'stair-run';
+                run3.className = 'stair-section';
+                run3.style.position = 'relative';
+                
+                const run3Label = document.createElement('div');
+                run3Label.className = 'stair-run-label';
+                run3Label.textContent = '第三跑';
+                run3.appendChild(run3Label);
                 
                 for (let i = 0; i < Math.min(stepsPerRun, 4); i++) {
-                    run3.appendChild(createStair());
+                    run3.appendChild(createStep());
                 }
-                run3.appendChild(createPlatform());
+                run3.appendChild(createPlatform('平台'));
                 
-                stairVisual.appendChild(run1);
-                stairVisual.appendChild(run2);
-                stairVisual.appendChild(run3);
+                diagramElement.appendChild(run1);
+                diagramElement.appendChild(run2);
+                diagramElement.appendChild(run3);
             }
         }
         
-        function createStair() {
-            const stair = document.createElement('div');
-            stair.className = 'stair';
-            return stair;
+        function createStep() {
+            const step = document.createElement('div');
+            step.className = 'stair-step stair-3d-effect';
+            return step;
         }
         
-        function createPlatform() {
+        function createPlatform(text) {
             const platform = document.createElement('div');
-            platform.className = 'stair-platform';
+            platform.className = 'stair-platform stair-3d-effect';
+            if (text) {
+                platform.textContent = text;
+            }
             return platform;
         }
         
@@ -713,7 +848,7 @@
             updateCustomRunVisibility();
             calculateStairs();
             
-            // 添加触摸事件处理，提高移动端体验
+            // 添加触摸事件处理
             document.querySelectorAll('input').forEach(input => {
                 input.addEventListener('touchstart', function(e) {
                     e.stopPropagation();
